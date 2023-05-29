@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+amlt/
+.amltconfig
+png/
+
 # C extensions
 *.so
 
