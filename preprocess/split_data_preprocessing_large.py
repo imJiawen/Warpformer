@@ -196,7 +196,7 @@ def create_map(icu,events):
                 idx += 1
             
     print("got ", str(len(feature_set)), " features")
-    return chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict
+    return feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict
     
 def create_adm_split(adm):
 
@@ -233,6 +233,7 @@ if __name__ == '__main__':
     events = events.loc[~(events.CHARTTIME.isna() & events.VALUENUM.isna())]
 
     # feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict = pickle.load(open(dict_path, 'rb'))
+    feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict = create_map(icu,events)
     
     # This is optional
     # remove_mod_idx = [] # keep 122 features
@@ -250,8 +251,6 @@ if __name__ == '__main__':
             new_idx += 1
             feature_name.append(i)
     print("got ", str(len(feature_map)), " features")
-
-    chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict = create_map(icu,events)
     
     events.CHARTTIME = pd.to_datetime(events.CHARTTIME)
     adm.ADMITTIME = pd.to_datetime(adm.ADMITTIME)
