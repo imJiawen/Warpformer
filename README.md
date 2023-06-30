@@ -1,5 +1,6 @@
 # Warpformer
 
+This is an offical implementation of [Warpformer: A Multi-scale Modeling Approach for Irregular Clinical Time Series](https://arxiv.org/abs/2306.09368).
 
 ## Download Clinical Data & Task Building
 
@@ -35,10 +36,15 @@
       ```
 
 
-## Run
+## Run the Model
 
-   To run Warpformer, using the 
+   Please refer to the script [run.sh](./run.sh) for specific configurations used to obtain the main experimental results in the paper. To reproduce the results, please uncomment the corresponding commands and run:
+   ```bash
+   bash run.sh
+   ```
 
+
+   Example:
    ```bash
    python Main_warp.py --task {task_name} \
                   --data_path {path_to_data_folder} \
@@ -49,8 +55,7 @@
                   --lr 0.001 \
                   --batch {batch_size} \
                   --warp_num {warp_num} \
-                  --dp_flag \
-
+                  --dp_flag
    ```
 
    - ```task```: the downstram task name, select from ```[mor, decom, cip, wbm, los, active, physio]```.
@@ -59,7 +64,7 @@
    - ```dp_flag```: use DataParallel for training or not.
 
 
-   For more details, please refer to ```run.sh``` and ```Main_warp.py```.
+   For more details, please refer to [run.sh](./run.sh) and [Main_warp.py](./Main_warp.py).
 
 ## License
 
