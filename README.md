@@ -20,7 +20,7 @@ This is an offical implementation of [Warpformer: A Multi-scale Modeling Approac
 
    1. clone this repository and run 
    ```bash
-   cd ClinTS_HII
+   cd Warpformer
    ```
    2. create an environment ```warpformer``` and activate it.
    ```bash
