@@ -328,7 +328,8 @@ med = ev_k.VALUENUM.loc[ind].median()
 ev_k.loc[~ind, 'VALUENUM'] = med
 ev_k['NAME'] = 'Ultrafiltrate'
 ev_k['VALUEUOM'] = 'mL'
-events = ev_k.copy()
+events = pd.concat([events, ev_k])
+del ev_k
 
 # # Extract multiple events. Replace outliers with median.
 print("multiple output events")
