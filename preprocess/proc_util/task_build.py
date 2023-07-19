@@ -27,7 +27,8 @@ def create_mor_large(adm, events, adm2subj_dict, feature_map, filt_adm_ids=None)
             
         patient =  [[] for _ in range(len(feature_map))]
         for _, row in p.iterrows():
-            patient[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
+            if row.NAME in feature_map:
+                patient[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
         
         if adm_id in adm2subj_dict:
             mor_adm_icu_id.append((adm2subj_dict[adm_id], adm_id, None))
@@ -103,9 +104,8 @@ def create_decompensation_large(adm, events, feature_map, icu_dict, los_dict, ad
                 
                 count = 0
                 patient_icu_sample =  [[] for _ in range(len(feature_map))]
+
                 for _, row in p_sample.iterrows():
-                    # patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
-                    
                     if row.NAME in feature_map:
                         patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
                         count += 1
@@ -166,7 +166,8 @@ def create_los_large(adm, events, feature_map, icu_dict, los_dict, adm2subj_dict
                     
                 patient_icu_sample =  [[] for _ in range(len(feature_map))]
                 for _, row in p_sample.iterrows():
-                    patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
+                    if row.NAME in feature_map:
+                        patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
                     
 
                 cur_label = number2cls((los - t)/24)
@@ -235,7 +236,8 @@ def create_wbm_large(adm, events, feature_map, chart_label_dict, icu_dict, los_d
                     continue
                 patient_icu_sample =  [[] for _ in range(len(feature_map))]
                 for _, row in p_sample.iterrows():
-                    patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
+                    if row.NAME in feature_map:
+                        patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
                     
                 p_label = p_icu_data.loc[(pd.Timedelta(t + observ_win,'h')<=(p_icu_data.CHARTTIME-intime))&((p_icu_data.CHARTTIME-intime) < pd.Timedelta(t + observ_win + future_time_interval,'h'))]
                 
@@ -306,7 +308,8 @@ def create_interv_pred_large(adm, events, feature_map, icu_dict, los_dict, adm2s
                     continue
                 patient_icu_sample =  [[] for _ in range(len(feature_map))]
                 for _, row in p_sample.iterrows():
-                    patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
+                    if row.NAME in feature_map:
+                        patient_icu_sample[feature_map[row.NAME]].append((row.CHARTTIME, row.VALUENUM))
                 
                 vent_label = cal_label(interv['vent'], adm_index, int(t), observ_win, gap_win, future_time_interval)
                 vaso_label = cal_label(interv['vaso'], adm_index, int(t), observ_win, gap_win, future_time_interval)

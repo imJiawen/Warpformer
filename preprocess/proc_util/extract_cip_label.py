@@ -304,7 +304,7 @@ def save_outcome(data, querier, outcome_schema, host=None):
     return df
 
 
-def extract_cip_data(resource_path, outPath, dbname, schema_name, host, user, password):
+def extract_cip_data(resource_path, outPath, dbname='mimic', host=None, user=None, password=None):
     mimic_mapping_filename = os.path.join(resource_path, 'itemid_to_variable_map.csv')
     range_filename = os.path.join(resource_path, 'variable_ranges.csv')
 
@@ -315,6 +315,7 @@ def extract_cip_data(resource_path, outPath, dbname, schema_name, host, user, pa
         os.path.join(resource_path, 'outcome_data_spec.json'))
 
     query_args = {'dbname': dbname}
+
     query_args['host'] = host
     query_args['user'] = user
     query_args['password'] = password

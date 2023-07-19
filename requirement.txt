@@ -1,0 +1,7 @@
+numpy
+sklearn
+tqdm
+torch==1.9.0
+pandas
+psycopg2
+einops

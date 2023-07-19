@@ -8,8 +8,8 @@ from tqdm import tqdm
 import pickle
 import numpy as np
 
-mimic_data_dir = 'path/to/mimic-iii-clinical-database-1.4/'
-
+# mimic_data_dir = 'path/to/mimic-iii-clinical-database-1.4/'
+mimic_data_dir = '/home/covpreduser/Blob/shunzhen/Healthcare/mimic-iii-clinical-database-1.4/'
 
 # Get all ICU stays.
 icu = pd.read_csv(mimic_data_dir+'ICUSTAYS.csv', usecols=['SUBJECT_ID', 'HADM_ID', 'ICUSTAY_ID', 'INTIME', 'OUTTIME'])

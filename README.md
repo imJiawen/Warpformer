@@ -2,6 +2,38 @@
 
 This is an offical implementation of [Warpformer: A Multi-scale Modeling Approach for Irregular Clinical Time Series](https://arxiv.org/abs/2306.09368).
 
+
+## Setup
+
+   ### Requirements
+
+   Your local system should have the following executables:
+
+   - [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
+   - Python 3.7 or later
+   - git
+   - [PostreSQL](http://www.postgresql.org/download/) (Opt.)
+
+   ### Create conda environment
+
+   All instructions below should be executed from a terminal.
+
+   1. clone this repository and run 
+   ```bash
+   cd ClinTS_HII
+   ```
+   2. create an environment ```warpformer``` and activate it.
+   ```bash
+   conda create -n warpformer python=3.7
+   conda activate warpformer
+   ```
+   3. install the required Python modules using file [requirements.txt](requirements.txt).
+   ```bash
+   pip install -r requirement.txt
+   ```
+   Tips: If you cannot install psycopg2 successfully, please try ```sudo apt-get install libpq-dev``` first and then run the command ```pip install psycopg2```.
+
+
 ## Download Clinical Data & Task Building
 
    Our benchmark includes a diverse set of clinical tasks covering different clinical scenarios, with 61 common physiology signals and 42 widely used interventions in intensive care units. The following table summarizes the statistics of these tasks.
@@ -30,7 +62,12 @@ This is an offical implementation of [Warpformer: A Multi-scale Modeling Approac
       python preprocess_mimic_iii_large.py
       ```
 
-   2. Modify the ```data_root_folder``` and ```mimic_data_dir``` variables to the MIMIC-III folder path in the ```split_data_preprocessing_large.py```, and run the following command for data splitting and downstream tasks generation:
+   2. (opt.) If you want to build the **CIP** task, it is necessary to obtain a file all_hourly_data.h5 first. Otherwise, you can skip this step. 
+ 
+      1) Start by referring to the [MIT-LCP](https://github.com/MIT-LCP/mimic-code/tree/main/mimic-iii/buildmimic/postgres) repository to create a database where you can host the MIMIC-III data.
+      2) Next, you will need to generate the file named ```all_hourly_data.h5``` using the [MIMIC_Extract](https://github.com/MLforHealth/MIMIC_Extract). Once generated, place the ```all_hourly_data.h5``` file in the ```save_data_folder/tmp/``` directory. You can locate the ```interv_outPath``` variable in the ```split_data_preprocessing_large.py``` file and ensure that it points to the correct destination, i.e., the ```save_data_folder/tmp/``` folder.
+
+   3. Modify the ```data_root_folder``` and ```mimic_data_dir``` variables to the MIMIC-III folder path in the ```split_data_preprocessing_large.py```, and run the following command for downstream tasks generation:
       ```bash
       python split_data_preprocessing_large.py
       ```

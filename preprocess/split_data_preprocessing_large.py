@@ -198,10 +198,6 @@ def create_map(icu,events):
     print("got ", str(len(feature_set)), " features")
     return feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict
     
-def create_adm_split(adm):
-
-
-    return train_adm_id, test_adm_id, val_adm_id
 
 if __name__ == '__main__':
     data_root_folder = "path/to/save_data_folder/"
@@ -217,7 +213,7 @@ if __name__ == '__main__':
     adm_id_folder =  "./adm_id/"
 
     bio_path = data_tmp_folder + "patient_records_large.p"
-    interv_outPath = data_tmp_folder + "cip_hourly_data.h5"
+    interv_outPath = data_tmp_folder + "all_hourly_data.h5"
     resource_path = "./proc_util/resource/"
     
     print("Loading data...")
@@ -227,12 +223,13 @@ if __name__ == '__main__':
     adm = pd.read_csv(mimic_data_dir+'ADMISSIONS.csv', usecols=['SUBJECT_ID', 'HADM_ID', 'ADMITTIME', 'DISCHTIME', 'DEATHTIME', 'HOSPITAL_EXPIRE_FLAG'])
     adm.drop_duplicates(inplace=True)
 
-    events = pd.read_csv('./mimic_iii_events.csv', usecols=['HADM_ID', 'ICUSTAY_ID', 'CHARTTIME', 'VALUENUM', 'TABLE', 'NAME'])
+    mimi_iii_event = './mimic_iii_events.csv'
+
+    events = pd.read_csv(mimi_iii_event, usecols=['HADM_ID', 'ICUSTAY_ID', 'CHARTTIME', 'VALUENUM', 'TABLE', 'NAME'])
     events.drop_duplicates(inplace=True)
 
     events = events.loc[~(events.CHARTTIME.isna() & events.VALUENUM.isna())]
 
-    # feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict = pickle.load(open(dict_path, 'rb'))
     feature_map, chart_label_dict, icu_dict, los_dict, adm2subj_dict, adm2deathtime_dict = create_map(icu,events)
     
     # This is optional
@@ -242,6 +239,7 @@ if __name__ == '__main__':
 
 
     tmp_feature_name = sorted(feature_map.items(),  key=lambda d: d[1], reverse=False)
+
     feature_map = {}
     feature_name = []
     new_idx = 0
@@ -264,6 +262,8 @@ if __name__ == '__main__':
     val_adm_id = pickle.load(open(adm_id_folder + 'val_adm_idx.p', 'rb'))
 
     # # #==== Mortality ====
+    print("Building Mortality task...")
+
     mor_adm_icu_id, mor_data, mor_label = create_mor_large(adm, events, adm2subj_dict, feature_map, filt_adm_ids=train_adm_id)
     preproc_xy(mor_adm_icu_id, mor_data, mor_label, data_root_folder+'mor/', 'train')
 
@@ -273,8 +273,10 @@ if __name__ == '__main__':
     mor_adm_icu_id, mor_data, mor_label = create_mor_large(adm, events, adm2subj_dict, feature_map, filt_adm_ids=val_adm_id)
     preproc_xy(mor_adm_icu_id, mor_data, mor_label, data_root_folder+'mor/', 'val')
     
+    print("Build Mortality task done")
+
     # #==== Decompensation ====
-    print("building Decompensation task...")
+    print("Building Decompensation task...")
     
     adm_icu_id, decom_data, decom_label = create_decompensation_large(adm, events, feature_map, icu_dict, los_dict, adm2deathtime_dict, adm2subj_dict, \
     sample_rate=12, shortest_length=24, future_time_interval=24.0, filt_adm_ids=train_adm_id)
@@ -291,9 +293,10 @@ if __name__ == '__main__':
     
     preproc_xy(adm_icu_id, decom_data, decom_label, data_root_folder+'decom/', 'val')
     
+    print("Build Decompensation task done")
     
     # # #==== Length of Stay ====
-    print("building Length of Stay task...")
+    print("Building Length of Stay task...")
     
     adm_icu_id, los_data, los_label = create_los_large(adm, events, feature_map, icu_dict, los_dict, adm2subj_dict, \
     sample_rate=12, shortest_length=24, filt_adm_ids=train_adm_id)
@@ -309,9 +312,11 @@ if __name__ == '__main__':
     sample_rate=12, shortest_length=24, filt_adm_ids=val_adm_id)
 
     preproc_xy(adm_icu_id, los_data, los_label, data_root_folder+'los/', 'val')
+
+    print("Build Length of Stay task done")
     
     # #==== Next Timepoint Will be Measured ====
-    print("building Next Timepoint Will be Measured task...")
+    print("Building Next Timepoint Will be Measured task...")
     
     wbm_adm_icu_id, wbm_data, wbm_label = create_wbm_large(adm, events, feature_map, chart_label_dict, icu_dict, los_dict, adm2deathtime_dict, adm2subj_dict, \
      sample_rate=12.0, observ_win=48.0, future_time_interval=1.0, filt_adm_ids=train_adm_id)
@@ -327,12 +332,18 @@ if __name__ == '__main__':
      sample_rate=12.0, observ_win=48.0, future_time_interval=1.0, filt_adm_ids=val_adm_id)
 
     preproc_xy(wbm_adm_icu_id, wbm_data, wbm_label, data_root_folder+'wbm/', 'val')
+
+    print("Build Next Timepoint Will be Measured task done")
     
     # #==== Clinical Intervention Prediction ====
-    print("building Clinical Intervention Prediction task...")
+    print("Building Clinical Intervention Prediction task...")
     
     if not os.path.isfile(interv_outPath):
-        extract_cip_data(resource_path, interv_outPath, args.dbname, args.search_path, args.host, args.user, args.password)
+        # extract_cip_data(resource_path, interv_outPath, dbname, host, user, password)
+        print("Cannot find file ", interv_outPath)
+        print("Please obtain all_hourly_data.h5 from https://github.com/MLforHealth/MIMIC_Extract first.")
+        sys.exit(0)
+        
     
     print("Loading files from ", interv_outPath)
     Y = pd.read_hdf(interv_outPath,'interventions')
@@ -354,4 +365,4 @@ if __name__ == '__main__':
     preproc_interv_xy(cip_adm_icu_id, cip_data, vent_labels, vaso_labels, data_root_folder+'cip/', "val")
     
     
-    print("build all the task done.")
+    print("Build all the task done.")
