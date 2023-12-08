@@ -27,7 +27,9 @@ python Main_warp.py \
     --data_path /path/to/datasets/ \
     --batch 32 --lr 1e-3 --epoch 50 --patience 5 \
     --log /path/to/log/ --save_path /path/to/save/ \
-    --task 'physio' --seed 0 --warp_num '0_0.2_1'
+    --task 'physio' --seed 0 --warp_num '0_0.2_1' \
+    --batch_size 32 --d_inner_hid 32 --d_k 8 --d_model 32 --d_v 8 \
+    --dropout 0.0 --n_head 1 --n_layers 2 
 
 
 # Human Activity (median len. 50)
