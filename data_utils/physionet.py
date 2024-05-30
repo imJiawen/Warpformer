@@ -44,7 +44,7 @@ class PhysioNet(object):
 
   urls = [
     'https://physionet.org/files/challenge-2012/1.0.0/set-a.tar.gz?download',
-    'https://physionet.org/files/challenge-2012/1.0.0/set-b.tar.gz?download',
+    # 'https://physionet.org/files/challenge-2012/1.0.0/set-b.tar.gz?download',
   ]
 
   outcome_urls = ['https://physionet.org/files/challenge-2012/1.0.0/Outcomes-a.txt']

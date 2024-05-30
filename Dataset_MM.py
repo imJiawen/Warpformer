@@ -382,7 +382,7 @@ def get_physionet_data(args, device, q=0.016, flag=1):
 
     if not args.retrain:
         train_data, val_data = model_selection.train_test_split(train_data, train_size=0.8,
-                                                                random_state=11, shuffle=True)
+                                                                random_state=11, shuffle=False)
 
         val_data_combined = variable_time_collate_fn(val_data, device,input_dim=input_dim,data_min=data_min, data_max=data_max)
 
@@ -390,7 +390,7 @@ def get_physionet_data(args, device, q=0.016, flag=1):
             val_data_combined[0], val_data_combined[1].long().squeeze())
 
         val_dataloader = DataLoader(
-            val_data_combined, batch_size=batch_size, shuffle=True)
+            val_data_combined, batch_size=batch_size, shuffle=False)
     else:
         val_dataloader = None
 

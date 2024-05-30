@@ -164,3 +164,9 @@ cython_debug/
 #.idea/
 
 *.DS_Store
+
+log/
+save/
+
+1.sh
+test.py

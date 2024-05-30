@@ -327,18 +327,18 @@ def main():
         opt.n_classes = 7
         opt.median_len = 50
         opt.full_attn = True
-        opt.d_model = 64
-        opt.n_head = 8
-        opt.n_layers = 3
+        # opt.d_model = 64
+        # opt.n_head = 8
+        # opt.n_layers = 3
 
 
     elif opt.task == 'physio':
         trainloader, validloader, testloader, opt.num_types = get_physionet_data(opt, opt.device)
         opt.n_classes = 2
         opt.median_len = 72
-        opt.d_model = 32
-        opt.n_head = 1
-        opt.n_layers = 2
+        # opt.d_model = 32
+        # opt.n_head = 1
+        # opt.n_layers = 2
 
     else:
         trainloader, validloader, testloader = get_clints_hii_data(opt)
