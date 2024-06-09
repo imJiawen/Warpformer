@@ -2,6 +2,13 @@
 
 This is an offical implementation of [Warpformer: A Multi-scale Modeling Approach for Irregular Clinical Time Series](https://arxiv.org/abs/2306.09368).
 
+## UPDATE (2024/06/09)
+
+   If you ran this script before 2024/06/09 and were unable to reproduce the results from the paper on the PhysioNet dataset, please follow these steps:
+
+   1. Remove the `/path/to/datasets/physionet/` folder.
+   2. Set the `--task` in `run.sh` to `physio`.
+   3. Re-run the `run.sh` script.
 
 ## Setup
 

@@ -167,6 +167,7 @@ cython_debug/
 
 log/
 save/
+datasets/
 
 1.sh
 test.py

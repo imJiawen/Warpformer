@@ -1,7 +1,8 @@
 numpy
-sklearn
+scikit-learn
 tqdm
 torch==1.9.0
+torchvision
 pandas
 psycopg2
 einops

@@ -5,7 +5,7 @@ import tarfile
 import torch
 from torch.utils.data import DataLoader
 from torchvision.datasets.utils import download_url
-
+import sys
 
 def get_data_min_max(records, device):
 	#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -62,7 +62,7 @@ class PhysioNet(object):
   labels_dict = {k: i for i, k in enumerate(labels)}
 
   def __init__(self, root, train=True, download=False,
-    quantization = 0.1, n_samples = None, device = torch.device("cpu")):
+    quantization = 0.016, n_samples = None, device = torch.device("cpu")):
 
     self.root = root
     self.train = train
@@ -96,7 +96,7 @@ class PhysioNet(object):
   def download(self):
     if self._check_exists():
       return
-
+    
     #self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     os.makedirs(self.raw_folder, exist_ok=True)
     os.makedirs(self.processed_folder, exist_ok=True)
@@ -126,13 +126,15 @@ class PhysioNet(object):
       tar = tarfile.open(os.path.join(self.raw_folder, filename), "r:gz")
       tar.extractall(self.raw_folder)
       tar.close()
-
+      
       print('Processing {}...'.format(filename))
 
       dirname = os.path.join(self.raw_folder, filename.split('.')[0])
       patients = []
       total = 0
-      for txtfile in os.listdir(dirname):
+      txtfile_list = os.listdir(dirname)
+      txtfile_list.sort()
+      for txtfile in txtfile_list:
         record_id = txtfile.split('.')[0]
         with open(os.path.join(dirname, txtfile)) as f:
           lines = f.readlines()
@@ -196,8 +198,8 @@ class PhysioNet(object):
       filename = url.rpartition('/')[2]
 
       if not os.path.exists(
-        os.path.join(self.processed_folder, 
-          filename.split('.')[0] + "_" + str(self.quantization) + '.pt')
+        os.path.join(self.processed_folder,
+                     filename.split('.')[0].replace(' ','') + "_" + str(self.quantization) + '.pt')
       ):
         return False
     return True
@@ -208,7 +210,7 @@ class PhysioNet(object):
 
   @property
   def processed_folder(self):
-    return os.path.join(self.root, self.__class__.__name__, 'processed')
+    return os.path.join(self.root, self.__class__.__name__, 'processed/')
 
   @property
   def training_file(self):
@@ -239,3 +241,4 @@ class PhysioNet(object):
     fmt_str += '    Quantization: {}\n'.format(self.quantization)
     fmt_str += '    Reduce: {}\n'.format(self.reduce)
     return fmt_str
+
