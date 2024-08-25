@@ -37,7 +37,7 @@ python Main_warp.py \
 
 # python Main_warp.py \
 #     --data_path /path/to/datasets/ \
-#     --batch 64 --lr 1e-3 --epoch 50 --patience 10 \
+#     --batch 64 --lr 1e-3 --epoch 50 --patience 5 \
 #     --log /path/to/log/ \
 #     --save_path /path/to/save/ \
-#     --task 'active' --seed 0 --warp_num '0_1.2_1' 
+#     --task 'active' --seed 0 --warp_num '1.4_0.2_1' 

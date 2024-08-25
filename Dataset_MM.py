@@ -8,6 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 from data_utils.person_activity import PersonActivity
 from data_utils.physionet import PhysioNet
+import pickle
 
 Constants_PAD = 0
 
@@ -363,18 +364,31 @@ def get_physionet_data(args, device, q=0.016, flag=1):
     train_dataset_obj = PhysioNet(args.data_path + 'physionet', train=True,
                                   quantization=q,
                                   download=True, n_samples=8000,
-                                  device=device)
+                                  device='cpu')
+                                #   device=device)
 
     # Combine and shuffle samples from physionet Train and physionet Test
     total_dataset = train_dataset_obj[:len(train_dataset_obj)]
     data_min, data_max = get_data_min_max(total_dataset, device)
     print(len(total_dataset))
+    
+    # For reproduce experimental results
+    with open('./data_utils/train_record_id.pkl', 'rb') as f:
+        train_record_id = pickle.load(f)
+        
+    with open('./data_utils/test_record_id.pkl', 'rb') as f:
+        test_record_id = pickle.load(f)
+    
+    train_data = [item for item in total_dataset if item[0] in train_record_id]
+    train_data = sorted(train_data, key=lambda x: train_record_id.index(x[0]))
+    
+    test_data = [item for item in total_dataset if item[0] in test_record_id]
+
     # Shuffle and split
-    train_data, test_data = model_selection.train_test_split(total_dataset, train_size=0.8,
-                                                             random_state=42, shuffle=True)
+    # train_data, test_data = model_selection.train_test_split(total_dataset, train_size=0.8, 
+    #                                                          random_state=42, shuffle=True)
 
-    record_id, tt, vals, mask, labels = train_data[0]
-
+    _, _, vals, _, _ = train_data[0]
 
     input_dim = vals.size(-1)
     batch_size = min(len(train_dataset_obj), args.batch_size)

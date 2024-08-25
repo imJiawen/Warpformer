@@ -133,7 +133,7 @@ class PhysioNet(object):
       patients = []
       total = 0
       txtfile_list = os.listdir(dirname)
-      txtfile_list.sort()
+
       for txtfile in txtfile_list:
         record_id = txtfile.split('.')[0]
         with open(os.path.join(dirname, txtfile)) as f:
